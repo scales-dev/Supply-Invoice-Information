@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '9.2.2'
+}
+
+group = 'org.example'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    // https://github.com/xdrop/fuzzywuzzy
+    implementation("me.xdrop:fuzzywuzzy:1.4.0")
+
+    // https://jitpack.io/#scales-dev/Spreadsheet-Scripting
+    implementation 'com.github.scales-dev:Spreadsheet-Scripting:d4f0cd2814'
+
+    // https://github.com/scales-dev/Network-Util
+    implementation 'com.github.scales-dev:Network-Util:e600cf347b'
+
+    // https://github.com/google/gson
+    implementation 'com.google.code.gson:gson:2.15.0'
+}
+
+jar {
+    manifest {
+        // java wont run without this!
+        attributes('Main-Class': 'org.example.Main')
+    }
+}
