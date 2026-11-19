@@ -82,7 +82,7 @@ public class Main {
       double realSalePrice = salePrice * saleToSupplyRatio;
 
       double profit = realSalePrice - supplyPrice;
-      double profitMargin = (profit / salePrice) * 100;
+      double profitMargin = (profit / supplyPrice) * 100;
 
       LinkedHashMap<String, String> productOutputMap = new LinkedHashMap<>();
       productOutputMap.put("Supply Product", product.get("SUPPLY_NAME").getAsString());
