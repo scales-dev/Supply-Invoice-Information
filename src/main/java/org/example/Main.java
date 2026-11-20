@@ -2,7 +2,6 @@ package org.example;
 
 import com.google.gson.*;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
-import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import scales.dev.NetworkUtil;
 import scales.dev.SpreadsheetUtil;
 
@@ -107,7 +106,7 @@ public class Main {
     String matchingName = normalise(supplyName);
     List<String> matchingNames = SHOP_PRODUCTS.keySet()
             .stream()
-            .sorted(Comparator.comparingInt(s -> -FuzzySearch.weightedRatio(normalise(s), matchingName)))
+            .sorted(Comparator.comparingInt(s -> -FuzzySearch.tokenSetRatio(matchingName, normalise(s))))
             .toList();
 
     String matchingProductsOutput = arrayToIndexedString(matchingNames, 20);
