@@ -68,9 +68,10 @@ public class Main {
 
       JsonObject match = getStoredProduct(storage, name);
       // if it matches to a product that no longer exists, we gotta try again
-      boolean invalidMatch = match == null || !SHOP_PRODUCTS.containsKey(match.get("SALE_NAME").getAsString());
-      JsonObject product = invalidMatch ? promptInputName(name, row, input) : match;
+      JsonObject product = match == null ? promptInputName(name, row, input) : match;
 
+      // todo: im not actually gonna do this, but for clean code,
+      //  "product" should have its own class not a generic JsonObject
       if (product == null) continue;
 
       storage.add(product);
@@ -89,6 +90,10 @@ public class Main {
       productOutputMap.put("Supply Price", product.get("SUPPLY_PRICE").getAsString());
       productOutputMap.put("Sale Price", product.get("SALE_PRICE").getAsString());
       productOutputMap.put("Quantity Ratio", product.get("QUANTITY_RATIO").getAsString());
+
+      // todo: obviously these should be formulas
+      //  namely: =((E7*D7)-C7)/E7
+      //  and =F7/C7
       productOutputMap.put("Profit", Double.toString(profit));
       productOutputMap.put("Profit Margin", Double.toString(profitMargin));
       outputSpreadsheet.add(productOutputMap);
@@ -173,7 +178,15 @@ public class Main {
             .filter(name -> name.getAsJsonObject().get("SUPPLY_NAME").getAsString().equals(target))
             .findAny()
             .orElse(null);
-    return matchingElement == null ? null : matchingElement.getAsJsonObject();
+    if (matchingElement == null) return null;
+    JsonObject match = matchingElement.getAsJsonObject();
+    Double price = SHOP_PRODUCTS.get(match.get("SALE_NAME").getAsString());
+    if (price == null) return null;
+
+    match.remove("SALE_PRICE");
+    match.addProperty("SALE_PRICE", price);
+
+    return match;
   }
 
   private static String normalise(String text) {
